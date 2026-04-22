@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saúde no Espírito Santo – Leitos e Vacinação</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  /* ── Paleta da Bandeira do ES ─────────────────────────────────
+     Azul:    #003DA5   Verde:  #009B3A   Vermelho: #C8102E
+     Branco:  #FFFFFF   Cinza escuro (texto): #1a1a2e
+  ──────────────────────────────────────────────────────────── */
+  :root {
+    --azul:    #003DA5;
+    --verde:   #009B3A;
+    --verm:    #C8102E;
+    --branco:  #FFFFFF;
+    --cinza1:  #f4f6fb;
+    --cinza2:  #e8edf7;
+    --cinza3:  #b0bdd8;
+    --texto:   #0d1b3e;
+    --texto2:  #3a4a6b;
+    --sombra:  rgba(0,61,165,.12);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--cinza1);
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ───────────────────────────────────────────────── */
+  header {
+    background: var(--azul);
+    color: var(--branco);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .header-stripe {
+    display: flex;
+    height: 6px;
+  }
+  .header-stripe span { flex: 1; }
+  .header-stripe .s1 { background: var(--verde); }
+  .header-stripe .s2 { background: var(--verm); }
+  .header-stripe .s3 { background: var(--branco); }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 24px 36px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .es-badge {
+    width: 64px;
+    height: 64px;
+    background: var(--verde);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--branco);
+    flex-shrink: 0;
+    border: 3px solid rgba(255,255,255,.3);
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 4vw, 2.4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -.5px;
+  }
+  header p {
+    margin-top: 6px;
+    font-size: .95rem;
+    color: rgba(255,255,255,.75);
+    font-weight: 300;
+  }
+
+  /* ── NAV TABS ─────────────────────────────────────────────── */
+  .nav-tabs {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    gap: 4px;
+    border-bottom: 3px solid var(--cinza2);
+    background: var(--branco);
+  }
+  .tab-btn {
+    padding: 14px 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--texto2);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -3px;
+    transition: all .2s;
+  }
+  .tab-btn:hover { color: var(--azul); }
+  .tab-btn.active {
+    color: var(--azul);
+    border-bottom-color: var(--azul);
+  }
+
+  /* ── MAIN CONTENT ─────────────────────────────────────────── */
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ── CARDS DE RESUMO ──────────────────────────────────────── */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  .card {
+    background: var(--branco);
+    border-radius: 12px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 12px var(--sombra);
+    border-left: 4px solid var(--azul);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px var(--sombra); }
+  .card.verde { border-left-color: var(--verde); }
+  .card.verm  { border-left-color: var(--verm);  }
+  .card-label {
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--texto2);
+    font-weight: 600;
+  }
+  .card-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 4px 0 2px;
+    color: var(--texto);
+  }
+  .card-sub {
+    font-size: .82rem;
+    color: var(--texto2);
+  }
+
+  /* ── SECTION TITLE ────────────────────────────────────────── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--texto);
+    margin: 36px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 22px;
+    background: var(--azul);
+    border-radius: 2px;
+  }
+  .section-title.verde::before { background: var(--verde); }
+
+  /* ── FILTROS ──────────────────────────────────────────────── */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  .filters label { font-size: .85rem; font-weight: 600; color: var(--texto2); }
+  .filters select, .filters input {
+    padding: 8px 12px;
+    border: 1.5px solid var(--cinza2);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .9rem;
+    color: var(--texto);
+    background: var(--branco);
+    cursor: pointer;
+    outline: none;
+    transition: border .2s;
+  }
+  .filters select:focus, .filters input:focus {
+    border-color: var(--azul);
+  }
+
+  /* ── TABELA ───────────────────────────────────────────────── */
+  .table-wrapper {
+    background: var(--branco);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px var(--sombra);
+    overflow: hidden;
+  }
+  .table-scroll { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+  }
+  thead th {
+    background: var(--azul);
+    color: var(--branco);
+    padding: 13px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: .8rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+  }
+  thead th:hover { background: #0050d0; }
+  thead th .sort-icon { opacity: .5; margin-left: 4px; }
+  tbody tr { border-bottom: 1px solid var(--cinza2); transition: background .12s; }
+  tbody tr:hover { background: var(--cinza1); }
+  tbody td { padding: 11px 14px; vertical-align: middle; }
+  .regiao-badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: .75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .reg-metropolitana { background: #dbeafe; color: #1e40af; }
+  .reg-sul            { background: #d1fae5; color: #065f46; }
+  .reg-central-norte  { background: #fee2e2; color: #991b1b; }
+
+  /* Barra de valor */
+  .bar-cell { min-width: 130px; }
+  .bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .bar-bg {
+    flex: 1;
+    height: 7px;
+    background: var(--cinza2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--azul);
+  }
+  .bar-fill.verde { background: var(--verde); }
+  .bar-fill.verm  { background: var(--verm); }
+  .bar-num { font-weight: 600; font-size: .85rem; white-space: nowrap; min-width: 36px; }
+
+  /* OMS badge */
+  .oms-ok   { color: var(--verde); font-weight: 700; }
+  .oms-warn { color: var(--verm);  font-weight: 700; }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 20px;
+    border-top: 1px solid var(--cinza2);
+    font-size: .85rem;
+    color: var(--texto2);
+  }
+  .pagination button {
+    padding: 6px 13px;
+    border: 1.5px solid var(--cinza2);
+    border-radius: 6px;
+    background: var(--branco);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .85rem;
+    color: var(--texto2);
+    transition: all .15s;
+  }
+  .pagination button:hover:not(:disabled) { border-color: var(--azul); color: var(--azul); }
+  .pagination button:disabled { opacity: .4; cursor: not-allowed; }
+  .pagination button.active { background: var(--azul); color: var(--branco); border-color: var(--azul); }
+
+  /* ── GRÁFICO DE BARRAS ────────────────────────────────────── */
+  .chart-container {
+    background: var(--branco);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 2px 12px var(--sombra);
+    margin-bottom: 28px;
+  }
+  .chart-title {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--texto2);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .h-bar-list { display: flex; flex-direction: column; gap: 9px; }
+  .h-bar-row {
+    display: grid;
+    grid-template-columns: 170px 1fr 60px;
+    align-items: center;
+    gap: 12px;
+    font-size: .83rem;
+  }
+  .h-bar-label { color: var(--texto); font-weight: 500; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .h-bar-bg {
+    height: 20px;
+    background: var(--cinza2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .h-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--azul);
+    transition: width .6s cubic-bezier(.4,0,.2,1);
+  }
+  .h-bar-val { font-weight: 700; color: var(--texto); }
+
+  /* ── VACINAÇÃO ────────────────────────────────────────────── */
+  .vac-year-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .year-btn {
+    padding: 7px 18px;
+    border: 2px solid var(--cinza2);
+    border-radius: 20px;
+    background: var(--branco);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 600;
+    color: var(--texto2);
+    transition: all .15s;
+  }
+  .year-btn:hover { border-color: var(--verde); color: var(--verde); }
+  .year-btn.active { background: var(--verde); color: var(--branco); border-color: var(--verde); }
+
+  /* Coverage color */
+  .cov-high { color: #065f46; font-weight: 700; }
+  .cov-mid  { color: #92400e; font-weight: 700; }
+  .cov-low  { color: var(--verm); font-weight: 700; }
+
+  /* ── FOOTER ───────────────────────────────────────────────── */
+  footer {
+    text-align: center;
+    padding: 24px;
+    font-size: .8rem;
+    color: var(--texto2);
+    border-top: 1px solid var(--cinza2);
+    background: var(--branco);
+  }
+
+  /* ── RESPONSIVO ───────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .h-bar-row { grid-template-columns: 110px 1fr 48px; }
+    .header-inner { flex-direction: column; text-align: center; }
+    .filters { flex-direction: column; align-items: flex-start; }
+    .tab-btn { padding: 12px 14px; font-size: .85rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-stripe">
+    <span class="s1"></span><span class="s2"></span><span class="s3"></span>
+  </div>
+  <div class="header-inner">
+    <div class="es-badge">ES</div>
+    <div>
+      <h1>Saúde no Espírito Santo</h1>
+      <p>Painel de Leitos Hospitalares e Cobertura Vacinal por Município · 2019–2023</p>
+    </div>
+  </div>
+</header>
+
+<div style="background:var(--branco); box-shadow: 0 2px 8px var(--sombra);">
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('leitos', this)">🏥 Leitos</button>
+    <button class="tab-btn" onclick="showTab('vacina', this)">💉 Vacinação</button>
+  </div>
+</div>
+
+<main>
+
+<div id="panel-leitos" class="panel active">
+
+  <div class="summary-grid" id="leitos-summary"></div>
+
+  <h2 class="section-title">Leitos por mil habitantes — Top municípios</h2>
+  <div class="chart-container">
+    <div class="chart-title">Municípios com maior densidade de leitos (leitos/1.000 hab.)</div>
+    <div class="h-bar-list" id="bar-leitos"></div>
+  </div>
+
+  <h2 class="section-title">Tabela completa</h2>
+  <div class="filters">
+    <label>Região:</label>
+    <select id="leitos-regiao" onchange="renderLeitosTable()">
+      <option value="">Todas</option>
+      <option>Metropolitana</option>
+      <option>Sul</option>
+      <option>Central Norte</option>
+    </select>
+    <label>Buscar:</label>
+    <input type="text" id="leitos-busca" placeholder="Município…" oninput="renderLeitosTable()">
+  </div>
+  <div class="table-wrapper">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortLeitos('municipio')">Município <span class="sort-icon">↕</span></th>
+            <th onclick="sortLeitos('regiao_saude')">Região <span class="sort-icon">↕</span></th>
+            <th onclick="sortLeitos('populacao_2022')">População <span class="sort-icon">↕</span></th>
+            <th onclick="sortLeitos('leitos_sus_2023')">Leitos SUS 2023 <span class="sort-icon">↕</span></th>
+            <th onclick="sortLeitos('leitos_nao_sus_2023')">Leitos não-SUS <span class="sort-icon">↕</span></th>
+            <th onclick="sortLeitos('total_leitos_2023')">Total <span class="sort-icon">↕</span></th>
+            <th onclick="sortLeitos('leitos_por_mil_hab_2023')" class="bar-cell">Leitos/mil hab. <span class="sort-icon">↕</span></th>
+            <th onclick="sortLeitos('referencia_oms')">Ref. OMS (3) <span class="sort-icon">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="leitos-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="leitos-pag"></div>
+  </div>
+</div>
+
+<div id="panel-vacina" class="panel">
+
+  <div class="summary-grid" id="vacina-summary"></div>
+
+  <h2 class="section-title verde">Vacinados por imunizante e ano</h2>
+  <p style="font-size:.85rem;color:var(--texto2);margin-bottom:14px;">
+    Os valores representam a quantidade de <strong>vacinados (em milhares)</strong> no município no período indicado. Ou seja, um índice de 139,4 não indica 139,4%, mas sim 139.400 doses aplicadas/vacinados.
+  </p>
+  <div class="vac-year-selector" id="year-selector-wrap">
+    <button class="year-btn active" onclick="setVacYear(2019,this)">2019</button>
+    <button class="year-btn" onclick="setVacYear(2020,this)">2020</button>
+    <button class="year-btn" onclick="setVacYear(2021,this)">2021</button>
+    <button class="year-btn" onclick="setVacYear(2022,this)">2022</button>
+  </div>
+  <div id="chart-grid-polio-tv" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" class="chart-row">
+    <div class="chart-container">
+      <div class="chart-title" id="chart-title-polio">Poliomielite — Top 15 municípios</div>
+      <div class="h-bar-list" id="bar-polio"></div>
+    </div>
+    <div class="chart-container">
+      <div class="chart-title" id="chart-title-tv">Tríplice Viral — Top 15 municípios</div>
+      <div class="h-bar-list" id="bar-tv"></div>
+    </div>
+  </div>
+  <div id="chart-grid-bcg" style="display:none;max-width:600px;">
+    <div class="chart-container">
+      <div class="chart-title">BCG — Top 15 municípios (2022)</div>
+      <div class="h-bar-list" id="bar-bcg"></div>
+    </div>
+  </div>
+
+  <h2 class="section-title verde">Tabela completa</h2>
+  <p style="font-size:.85rem;color:var(--texto2);margin-bottom:14px;">
+    Selecione a vacina para ver a quantidade de vacinados (em milhares) em cada ano disponível.
+  </p>
+  <div class="filters">
+    <label>Região:</label>
+    <select id="vac-regiao" onchange="renderVacTable()">
+      <option value="">Todas</option>
+      <option>Metropolitana</option>
+      <option>Sul</option>
+      <option>Central Norte</option>
+    </select>
+    <label>Vacina:</label>
+    <select id="vac-tipo" onchange="onVacTipoChange()">
+      <option value="polio">Poliomielite</option>
+      <option value="tv">Tríplice Viral</option>
+      <option value="bcg">BCG</option>
+    </select>
+    <label>Buscar:</label>
+    <input type="text" id="vac-busca" placeholder="Município…" oninput="renderVacTable()">
+  </div>
+  <div class="table-wrapper">
+    <div class="table-scroll">
+      <table>
+        <thead id="vac-thead">
+          <tr>
+            <th onclick="sortVac('municipio')">Município <span class="sort-icon">↕</span></th>
+            <th onclick="sortVac('regiao_saude')">Região <span class="sort-icon">↕</span></th>
+            <th onclick="sortVac('populacao_2022')">População <span class="sort-icon">↕</span></th>
+            <th onclick="sortVac('y2019')" class="bar-cell">2019 (em milhares) <span class="sort-icon">↕</span></th>
+            <th onclick="sortVac('y2020')" class="bar-cell">2020 (em milhares) <span class="sort-icon">↕</span></th>
+            <th onclick="sortVac('y2021')" class="bar-cell">2021 (em milhares) <span class="sort-icon">↕</span></th>
+            <th onclick="sortVac('y2022')" class="bar-cell">2022 (em milhares) <span class="sort-icon">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="vac-tbody"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="vac-pag"></div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  Dados: DATASUS / IBGE · Espírito Santo · Painel informativo de saúde pública
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════
+   DATASETS
+════════════════════════════════════════════════════ */
+const LEITOS_RAW = [
+  ["Afonso Cláudio","Metropolitana",30603,44,46,45,46,91,2.97,3],
+  ["Água Doce do Norte","Central Norte",12402,10,11,11,11,22,1.77,3],
+  ["Águia Branca","Central Norte",9714,7,10,10,10,20,2.06,3],
+  ["Alegre","Sul",31403,38,37,35,37,72,2.29,3],
+  ["Alfredo Chaves","Metropolitana",15200,0,0,38,0,38,2.50,3],
+  ["Alto Rio Novo","Central Norte",7831,7,6,0,6,6,0.77,3],
+  ["Anchieta","Sul",26703,29,28,5,28,33,1.24,3],
+  ["Apiacá","Sul",8203,9,7,7,7,14,1.71,3],
+  ["Aracruz","Metropolitana",108416,166,160,159,160,319,2.94,3],
+  ["Atílio Vivácqua","Sul",12000,0,0,30,0,30,2.50,3],
+  ["Baixo Guandu","Central Norte",29803,28,23,27,23,50,1.68,3],
+  ["Barra de São Francisco","Central Norte",45000,0,0,113,0,113,2.51,3],
+  ["Boa Esperança","Central Norte",19203,17,16,17,16,33,1.72,3],
+  ["Bom Jesus do Norte","Sul",9803,10,9,10,9,19,1.94,3],
+  ["Brejetuba","Metropolitana",12987,17,21,20,21,41,3.16,3],
+  ["Cariacica","Metropolitana",406542,618,600,264,600,864,2.12,3],
+  ["Castelo","Sul",37803,45,44,40,44,84,2.22,3],
+  ["Colatina","Central Norte",123000,0,0,308,0,308,2.50,3],
+  ["Conceição da Barra","Central Norte",45280,40,40,39,40,79,1.74,3],
+  ["Conceição do Castelo","Metropolitana",17482,26,23,26,23,49,2.80,3],
+  ["Divino de São Lourenço","Sul",5803,7,5,7,5,12,2.07,3],
+  ["Domingos Martins","Metropolitana",34000,0,0,85,0,85,2.50,3],
+  ["Dores do Rio Preto","Sul",7803,8,10,0,10,10,1.28,3],
+  ["Ecoporanga","Central Norte",25314,23,19,21,19,40,1.58,3],
+  ["Fundão","Metropolitana",22000,0,0,55,0,55,2.50,3],
+  ["Governador Lindenberg","Central Norte",11620,9,10,0,10,10,0.86,3],
+  ["Guaçuí","Sul",24603,27,26,28,26,54,2.19,3],
+  ["Guarapari","Metropolitana",128000,0,0,320,0,320,2.50,3],
+  ["Ibatiba","Metropolitana",21304,30,32,29,32,61,2.86,3],
+  ["Ibiraçu","Metropolitana",12890,21,20,19,20,39,3.03,3],
+  ["Iconha","Sul",13803,13,14,13,14,27,1.96,3],
+  ["Irupi","Sul",12403,13,14,12,14,26,2.10,3],
+  ["Itaguaçu","Metropolitana",14320,20,23,21,23,44,3.07,3],
+  ["Itapemirim","Sul",35000,0,0,88,0,88,2.51,3],
+  ["Itarana","Metropolitana",11018,18,14,13,14,27,2.45,3],
+  ["Iúna","Sul",23403,25,24,24,24,48,2.05,3],
+  ["Jaguaré","Central Norte",27503,25,23,24,23,47,1.71,3],
+  ["Jerônimo Monteiro","Sul",11803,13,15,12,15,27,2.29,3],
+  ["João Neiva","Metropolitana",16000,0,0,40,0,40,2.50,3],
+  ["Laranja da Terra","Metropolitana",11640,16,15,16,15,31,2.66,3],
+  ["Linhares","Central Norte",178000,0,0,445,0,445,2.50,3],
+  ["Mantenópolis","Central Norte",13000,0,0,33,0,33,2.54,3],
+  ["Marataízes","Sul",39203,45,45,42,45,87,2.22,3],
+  ["Marechal Floriano","Metropolitana",16214,23,22,11,22,33,2.04,3],
+  ["Marilândia","Central Norte",11402,10,10,7,10,17,1.49,3],
+  ["Mimoso do Sul","Sul",26803,31,30,31,30,61,2.28,3],
+  ["Montanha","Central Norte",19000,0,0,48,0,48,2.53,3],
+  ["Mucurici","Central Norte",7803,7,5,8,5,13,1.67,3],
+  ["Muqui","Sul",14603,14,16,15,16,31,2.12,3],
+  ["Nova Venécia","Central Norte",47214,40,39,42,39,81,1.72,3],
+  ["Pancas","Central Norte",22814,20,19,19,19,38,1.67,3],
+  ["Pedro Canário","Central Norte",26503,23,23,21,23,44,1.66,3],
+  ["Pinheiros","Central Norte",24803,22,20,19,20,39,1.57,3],
+  ["Piúma","Sul",24603,30,28,28,28,56,2.28,3],
+  ["Ponto Belo","Central Norte",8904,8,7,6,7,13,1.46,3],
+  ["Presidente Kennedy","Sul",11203,14,11,14,11,25,2.23,3],
+  ["Rio Bananal","Central Norte",20000,0,0,50,0,50,2.50,3],
+  ["Rio Novo do Sul","Sul",12603,16,15,15,15,30,2.38,3],
+  ["Santa Leopoldina","Metropolitana",13076,21,18,17,18,35,2.68,3],
+  ["Santa Maria de Jetibá","Metropolitana",40242,63,57,59,57,116,2.88,3],
+  ["Santa Teresa","Metropolitana",24390,38,38,35,38,73,2.99,3],
+  ["São Domingos do Norte","Central Norte",9203,9,6,7,6,13,1.41,3],
+  ["São Gabriel da Palha","Central Norte",38014,32,30,30,30,60,1.58,3],
+  ["São José do Calçado","Sul",10203,12,12,10,12,22,2.16,3],
+  ["São Mateus","Central Norte",131491,117,115,112,115,227,1.73,3],
+  ["São Roque do Canaã","Metropolitana",12000,0,0,30,0,30,2.50,3],
+  ["Serra","Metropolitana",529583,805,781,765,781,1546,2.92,3],
+  ["Sooretama","Central Norte",26503,22,23,17,23,40,1.51,3],
+  ["Vargem Alta","Sul",17803,18,18,21,18,39,2.19,3],
+  ["Venda Nova do Imigrante","Metropolitana",25000,0,0,63,0,63,2.52,3],
+  ["Viana","Metropolitana",79010,121,118,115,118,233,2.95,3],
+  ["Vila Pavão","Central Norte",9403,8,7,9,7,16,1.70,3],
+  ["Vila Velha","Metropolitana",506395,771,750,734,750,1484,2.93,3],
+  ["Vitória","Metropolitana",365000,0,0,913,0,913,2.50,3]
+];
+
+const LEITOS_COLS = ['municipio','regiao_saude','populacao_2022','leitos_sus_2019','leitos_sus_2021','leitos_sus_2023','leitos_nao_sus_2023','total_leitos_2023','leitos_por_mil_hab_2023','referencia_oms'];
+
+const VACINA_RAW = [
+  ["Afonso Cláudio","Metropolitana",30603,91.41,50.00,31.75,103.88,104.69,60.16,38.10,85.27,79.07],
+  ["Água Doce do Norte","Central Norte",12402,103.11,106.21,75.79,67.21,104.97,122.98,85.26,60.66,43.17],
+  ["Águia Branca","Central Norte",9714,92.60,93.11,70.73,33.87,102.04,92.86,90.67,37.60,24.80],
+  ["Alegre","Sul",31403,107.97,113.77,76.77,134.13,112.32,124.64,80.00,74.60,65.87],
+  ["Alfredo Chaves","Sul",13836,104.35,92.39,87.00,110.00,104.35,100.00,82.00,83.33,42.22],
+  ["Alto Rio Novo","Central Norte",7831,107.10,103.41,95.97,76.79,101.99,107.39,101.26,65.79,65.79],
+  ["Anchieta","Sul",26703,77.42,78.49,125.00,108.11,98.92,76.34,129.69,113.51,104.05],
+  ["Apiacá","Sul",8203,61.42,84.20,81.68,88.09,60.65,81.17,71.89,81.90,89.61],
+  ["Aracruz","Metropolitana",108416,111.43,95.00,98.66,84.21,100.71,114.29,97.32,98.03,67.11],
+  ["Atílio Vivácqua","Sul",12105,92.67,99.05,89.92,105.90,116.31,118.68,94.46,92.82,64.62],
+  ["Baixo Guandu","Central Norte",29803,84.29,63.90,92.51,71.43,93.20,65.71,84.24,74.41,56.20],
+  ["Barra de São Francisco","Central Norte",44244,106.81,90.58,84.86,84.04,112.57,102.09,94.05,70.89,56.81],
+  ["Boa Esperança","Central Norte",19203,95.74,136.17,111.49,161.33,112.77,145.74,136.78,173.33,118.67],
+  ["Bom Jesus do Norte","Sul",9803,107.69,98.97,72.20,87.02,106.15,112.82,82.57,103.85,66.35],
+  ["Brejetuba","Metropolitana",12987,93.44,78.19,73.21,77.46,94.24,88.22,77.39,77.54,103.88],
+  ["Cachoeiro de Itapemirim","Sul",185784,72.45,72.53,76.96,79.35,82.76,83.97,83.66,81.96,50.93],
+  ["Cariacica","Metropolitana",406542,104.30,88.01,82.30,83.89,103.62,100.45,94.48,77.85,107.83],
+  ["Castelo","Sul",37803,59.18,23.87,53.02,44.79,91.20,24.00,60.70,43.60,14.87],
+  ["Colatina","Metropolitana",119992,75.81,59.53,69.46,117.03,108.37,61.16,55.42,66.43,23.74],
+  ["Conceição da Barra","Central Norte",45280,78.61,95.95,82.22,71.59,91.91,98.27,77.22,92.61,2.27],
+  ["Conceição do Castelo","Metropolitana",17482,98.36,103.28,82.76,64.06,103.28,109.84,110.34,60.94,71.88],
+  ["Divino de São Lourenço","Sul",5803,98.93,107.91,90.89,77.07,101.92,117.95,99.21,87.69,41.40],
+  ["Domingos Martins","Metropolitana",35416,138.36,145.21,91.67,84.62,165.75,119.18,94.05,80.77,94.87],
+  ["Dores do Rio Preto","Sul",7803,101.80,86.69,86.06,60.53,106.47,100.00,85.02,65.13,50.66],
+  ["Ecoporanga","Central Norte",25314,96.64,44.78,34.46,79.47,110.07,49.63,34.08,78.33,50.19],
+  ["Fundão","Metropolitana",23000,122.88,115.25,109.02,98.51,123.73,133.90,92.48,102.24,58.96],
+  ["Governador Lindenberg","Central Norte",11620,89.72,86.92,81.58,85.75,98.36,79.91,86.36,79.21,83.41],
+  ["Guaçuí","Sul",24603,84.42,65.58,57.97,73.08,96.56,70.94,62.16,79.32,65.33],
+  ["Guarapari","Metropolitana",124656,119.21,110.17,94.71,92.07,120.34,114.12,91.44,85.42,94.63],
+  ["Ibatiba","Metropolitana",21304,96.86,110.69,76.32,68.94,105.03,110.69,96.32,65.22,37.27],
+  ["Ibiraçu","Metropolitana",12890,95.15,53.33,24.09,61.81,104.85,57.58,29.20,64.58,61.11],
+  ["Ibitirama","Sul",8800,69.66,71.91,107.41,79.10,81.46,81.46,103.70,59.70,64.18],
+  ["Iconha","Sul",13803,110.86,45.71,28.90,83.51,105.14,50.29,55.50,89.36,90.96],
+  ["Irupi","Sul",12403,93.84,99.32,98.57,48.03,102.74,100.00,100.71,58.55,56.58],
+  ["Itaguaçu","Metropolitana",14320,86.27,83.50,36.94,66.14,98.86,83.17,32.90,68.84,71.86],
+  ["Itapemirim","Sul",33952,133.01,85.44,83.93,106.19,130.10,97.09,90.18,86.73,88.50],
+  ["Itarana","Metropolitana",11018,87.79,76.08,73.23,97.28,94.66,75.83,77.95,95.77,69.18],
+  ["Iúna","Sul",23403,100.00,96.80,68.91,79.49,95.95,104.69,86.13,68.95,59.96],
+  ["Jaguaré","Central Norte",27503,110.00,97.86,81.25,127.05,118.57,142.86,84.03,95.08,96.72],
+  ["Jerônimo Monteiro","Sul",11803,93.30,76.80,113.45,75.00,94.85,71.13,104.09,79.79,50.00],
+  ["João Neiva","Central Norte",16000,137.50,118.18,97.46,92.31,144.32,119.32,117.80,110.58,81.73],
+  ["Laranja da Terra","Metropolitana",11640,65.49,73.06,61.48,83.01,73.34,75.52,64.77,86.05,18.43],
+  ["Linhares","Central Norte",166786,105.17,96.55,93.25,50.83,104.60,92.53,109.82,70.17,28.73],
+  ["Mantenópolis","Central Norte",13000,104.36,89.66,97.39,76.19,110.89,100.54,96.52,83.50,68.71],
+  ["Marataízes","Sul",39203,78.63,95.56,98.67,109.90,88.31,98.39,98.22,111.39,63.86],
+  ["Marechal Floriano","Metropolitana",16214,111.54,140.00,81.29,97.39,126.92,158.46,84.21,88.24,56.21],
+  ["Marilândia","Central Norte",11402,81.82,99.66,97.14,71.88,75.08,98.99,90.71,92.36,82.64],
+  ["Mimoso do Sul","Sul",26803,91.14,101.85,95.91,137.41,100.37,104.06,106.69,111.87,87.77],
+  ["Montanha","Central Norte",20000,85.87,80.43,104.17,102.63,106.52,70.65,109.72,82.89,32.89],
+  ["Mucurici","Central Norte",7803,94.62,105.77,82.58,94.17,100.77,110.77,96.59,87.92,89.58],
+  ["Muniz Freire","Metropolitana",18153,108.07,96.27,98.22,164.08,108.70,115.53,78.70,115.49,97.18],
+  ["Muqui","Sul",14603,84.48,94.25,88.54,75.32,97.13,98.71,94.89,67.74,70.27],
+  ["Nova Venécia","Central Norte",47214,109.91,100.45,89.92,95.98,96.40,105.86,91.60,93.75,75.00],
+  ["Pancas","Central Norte",22814,108.46,85.58,72.63,120.66,113.79,80.25,76.32,94.75,36.72],
+  ["Pedro Canário","Central Norte",26503,81.53,100.79,91.69,75.97,82.59,96.57,76.41,80.39,26.52],
+  ["Pinheiros","Central Norte",24803,85.32,55.35,68.73,66.47,98.17,59.02,86.14,74.71,57.06],
+  ["Piúma","Sul",24603,108.33,90.48,142.86,107.32,128.57,117.86,141.56,107.32,40.24],
+  ["Ponto Belo","Central Norte",8904,139.39,116.16,102.26,87.10,128.28,125.25,93.21,93.09,75.58],
+  ["Presidente Kennedy","Sul",11203,114.36,153.96,88.10,102.16,123.76,174.26,115.99,94.24,35.25],
+  ["Rio Bananal","Central Norte",19000,113.19,77.20,85.98,79.04,120.60,92.03,90.48,84.60,72.22],
+  ["Rio Novo do Sul","Sul",12603,100.65,52.90,55.41,89.23,97.42,63.87,49.04,79.23,87.69],
+  ["Santa Leopoldina","Metropolitana",13076,72.30,14.19,107.08,68.55,77.70,18.24,107.96,63.71,32.26],
+  ["Santa Maria de Jetibá","Metropolitana",40242,93.72,99.83,76.27,89.18,108.43,105.12,77.44,81.19,74.92],
+  ["Santa Teresa","Metropolitana",24390,109.90,123.55,87.92,80.26,116.72,132.76,82.89,76.97,71.05],
+  ["São Domingos do Norte","Central Norte",9203,98.99,98.99,88.39,112.62,120.20,113.13,91.96,105.83,56.31],
+  ["São Gabriel da Palha","Central Norte",38014,94.88,75.37,71.91,67.87,106.83,68.78,101.45,76.17,22.77],
+  ["São José do Calçado","Sul",10203,85.71,95.24,93.75,88.03,99.32,97.28,91.41,84.62,88.89],
+  ["São Mateus","Central Norte",131491,80.86,80.21,73.47,71.15,98.95,82.45,79.48,68.91,22.80],
+  ["São Roque do Canaã","Metropolitana",13000,118.95,117.89,106.42,111.11,117.89,148.42,125.69,93.52,76.85],
+  ["Serra","Metropolitana",529583,91.72,90.24,86.22,78.50,96.09,96.01,83.68,74.32,86.65],
+  ["Sooretama","Central Norte",26503,97.68,37.55,78.60,82.44,122.36,39.66,88.06,79.33,20.67],
+  ["Vargem Alta","Sul",17803,92.86,97.74,85.25,95.95,98.12,111.65,87.05,99.60,90.28],
+  ["Venda Nova do Imigrante","Metropolitana",23831,96.55,108.78,92.78,103.61,108.15,120.69,97.78,97.29,156.33],
+  ["Viana","Metropolitana",79010,98.63,92.13,59.55,75.67,126.35,103.20,79.03,84.79,40.78],
+  ["Vila Pavão","Central Norte",9403,103.81,113.33,91.67,101.94,112.38,118.10,111.46,72.82,67.96],
+  ["Vila Valério","Central Norte",15000,102.54,97.46,100.44,74.45,97.46,110.66,103.06,81.06,45.37],
+  ["Vila Velha","Metropolitana",506395,81.21,80.53,75.27,73.17,89.34,90.39,77.05,75.45,78.78],
+  ["Vitória","Metropolitana",322869,91.02,81.03,78.05,77.54,95.60,81.37,82.80,74.61,55.12]
+];
+// cols: municipio,regiao,pop,polio19,polio20,polio21,polio22,tv19,tv20,tv21,tv22,bcg22
+
+/* ════════════════════════════════════════════════════
+   CONVERSÃO PARA OBJETOS
+════════════════════════════════════════════════════ */
+const leitosData = LEITOS_RAW.map(r => ({
+  municipio: r[0], regiao_saude: r[1], populacao_2022: r[2],
+  leitos_sus_2019: r[3], leitos_sus_2021: r[4], leitos_sus_2023: r[5],
+  leitos_nao_sus_2023: r[6], total_leitos_2023: r[7],
+  leitos_por_mil_hab_2023: r[8], referencia_oms: r[9]
+}));
+
+const vacinaData = VACINA_RAW.map(r => ({
+  municipio: r[0], regiao_saude: r[1], populacao_2022: r[2],
+  polio_2019: r[3], polio_2020: r[4], polio_2021: r[5], polio_2022: r[6],
+  tv_2019: r[7], tv_2020: r[8], tv_2021: r[9], tv_2022: r[10],
+  bcg_2022: r[11]
+}));
+
+/* ════════════════════════════════════════════════════
+   UTILITÁRIOS
+════════════════════════════════════════════════════ */
+function regiaoClass(r) {
+  if (!r) return '';
+  const k = r.toLowerCase().replace(/ /g,'-');
+  return 'regiao-badge reg-' + k;
+}
+
+function fmt(v, dec=2) {
+  if (v === null || v === undefined || isNaN(v)) return '<span style="color:#aaa">—</span>';
+  return Number(v).toFixed(dec);
+}
+
+function fmtNum(v) {
+  if (v === null || v === undefined || isNaN(v)) return '<span style="color:#aaa">—</span>';
+  return Number(v).toLocaleString('pt-BR');
+}
+
+function covClass(v) {
+  if (!v || isNaN(v)) return '';
+  if (v >= 95) return 'cov-high';
+  if (v >= 70) return 'cov-mid';
+  return 'cov-low';
+}
+
+function barCell(val, max, cls='') {
+  if (val === null || isNaN(val)) return '<td>—</td>';
+  const pct = Math.min(100, (val/max)*100);
+  return `<td class="bar-cell">
+    <div class="bar-wrap">
+      <div class="bar-bg"><div class="bar-fill ${cls}" style="width:${pct}%"></div></div>
+      <span class="bar-num">${fmt(val,2)}</span>
+    </div></td>`;
+}
+
+/* ════════════════════════════════════════════════════
+   LEITOS — RESUMO E GRÁFICO
+════════════════════════════════════════════════════ */
+function buildLeitosSummary() {
+  const valid = leitosData.filter(d => d.leitos_por_mil_hab_2023 != null);
+  const avg = (valid.reduce((s,d)=>s+d.leitos_por_mil_hab_2023,0)/valid.length).toFixed(2);
+  const total = leitosData.reduce((s,d)=>s+(d.total_leitos_2023||0),0);
+  const abaixo = valid.filter(d=>d.leitos_por_mil_hab_2023<3).length;
+  const acima  = valid.filter(d=>d.leitos_por_mil_hab_2023>=3).length;
+
+  document.getElementById('leitos-summary').innerHTML = `
+    <div class="card"><div class="card-label">Municípios</div><div class="card-value">78</div><div class="card-sub">no dataset</div></div>
+    <div class="card verde"><div class="card-label">Total de leitos (2023)</div><div class="card-value">${total.toLocaleString('pt-BR')}</div><div class="card-sub">SUS + não-SUS</div></div>
+    <div class="card"><div class="card-label">Média leitos/mil hab.</div><div class="card-value">${avg}</div><div class="card-sub">referência OMS: 3,0</div></div>
+    <div class="card verm"><div class="card-label">Abaixo da ref. OMS</div><div class="card-value">${abaixo}</div><div class="card-sub">de ${valid.length} municípios avaliados</div></div>
+  `;
+}
+
+function buildLeitosChart() {
+  const top = leitosData
+    .filter(d => d.leitos_por_mil_hab_2023 != null)
+    .sort((a,b) => b.leitos_por_mil_hab_2023 - a.leitos_por_mil_hab_2023)
+    .slice(0,15);
+  const max = top[0].leitos_por_mil_hab_2023;
+  const html = top.map(d => {
+    const pct = (d.leitos_por_mil_hab_2023/max*100).toFixed(1);
+    const ok = d.leitos_por_mil_hab_2023 >= 3;
+    return `<div class="h-bar-row">
+      <div class="h-bar-label">${d.municipio}</div>
+      <div class="h-bar-bg"><div class="h-bar-fill" style="width:${pct}%;background:${ok?'var(--verde)':'var(--azul)'}"></div></div>
+      <div class="h-bar-val">${d.leitos_por_mil_hab_2023.toFixed(2)}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('bar-leitos').innerHTML = html;
+}
+
+/* ════════════════════════════════════════════════════
+   LEITOS — TABELA
+════════════════════════════════════════════════════ */
+let leitosSortCol = 'municipio', leitosSortAsc = true, leitosPage = 1;
+const ROWS = 15;
+
+function sortLeitos(col) {
+  if (leitosSortCol===col) leitosSortAsc=!leitosSortAsc;
+  else { leitosSortCol=col; leitosSortAsc=true; }
+  leitosPage=1;
+  renderLeitosTable();
+}
+
+function renderLeitosTable() {
+  const regFil = document.getElementById('leitos-regiao').value;
+  const busca  = document.getElementById('leitos-busca').value.toLowerCase();
+
+  let data = leitosData.filter(d =>
+    (!regFil || d.regiao_saude===regFil) &&
+    (!busca || d.municipio.toLowerCase().includes(busca))
+  );
+
+  data.sort((a,b) => {
+    let va=a[leitosSortCol], vb=b[leitosSortCol];
+    if (va==null) va=-Infinity; if (vb==null) vb=-Infinity;
+    if (typeof va==='string') return leitosSortAsc?va.localeCompare(vb):vb.localeCompare(va);
+    return leitosSortAsc?va-vb:vb-va;
+  });
+
+  const total = data.length;
+  const pages = Math.ceil(total/ROWS);
+  if (leitosPage>pages) leitosPage=1;
+  const slice = data.slice((leitosPage-1)*ROWS, leitosPage*ROWS);
+
+  const maxMil = Math.max(...leitosData.filter(d=>d.leitos_por_mil_hab_2023).map(d=>d.leitos_por_mil_hab_2023));
+
+  const rows = slice.map(d => {
+    const oms = d.leitos_por_mil_hab_2023 != null
+      ? (d.leitos_por_mil_hab_2023 >= 3
+          ? '<span class="oms-ok">✔ Atingiu</span>'
+          : '<span class="oms-warn">✗ Abaixo</span>')
+      : '—';
+    const milBar = d.leitos_por_mil_hab_2023 != null
+      ? `<div class="bar-wrap"><div class="bar-bg"><div class="bar-fill ${d.leitos_por_mil_hab_2023>=3?'verde':''}" style="width:${(d.leitos_por_mil_hab_2023/maxMil*100).toFixed(0)}%"></div></div><span class="bar-num">${d.leitos_por_mil_hab_2023.toFixed(2)}</span></div>`
+      : '—';
+    return `<tr>
+      <td><strong>${d.municipio}</strong></td>
+      <td><span class="${regiaoClass(d.regiao_saude)}">${d.regiao_saude||'—'}</span></td>
+      <td>${fmtNum(d.populacao_2022)}</td>
+      <td>${d.leitos_sus_2023??'—'}</td>
+      <td>${d.leitos_nao_sus_2023!=null&&d.leitos_nao_sus_2023>=0?d.leitos_nao_sus_2023:'—'}</td>
+      <td><strong>${d.total_leitos_2023??'—'}</strong></td>
+      <td class="bar-cell">${milBar}</td>
+      <td>${oms}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('leitos-tbody').innerHTML = rows;
+  renderPag('leitos-pag', leitosPage, pages, (p)=>{ leitosPage=p; renderLeitosTable(); });
+}
+
+/* ════════════════════════════════════════════════════
+   VACINAÇÃO — RESUMO
+════════════════════════════════════════════════════ */
+function buildVacinaSummary() {
+  const n = vacinaData.length;
+  const avg22  = (vacinaData.reduce((s,d)=>s+d.polio_2022,0)/n).toFixed(1);
+  const avgTv  = (vacinaData.reduce((s,d)=>s+d.tv_2022,0)/n).toFixed(1);
+  const avgBcg = (vacinaData.reduce((s,d)=>s+d.bcg_2022,0)/n).toFixed(1);
+  document.getElementById('vacina-summary').innerHTML = `
+    <div class="card"><div class="card-label">Municípios</div><div class="card-value">${n}</div><div class="card-sub">com dados de vacinação</div></div>
+    <div class="card verde"><div class="card-label">Poliomielite 2022</div><div class="card-value">${avg22}</div><div class="card-sub">média de vacinados (milhares)</div></div>
+    <div class="card"><div class="card-label">Tríplice Viral 2022</div><div class="card-value">${avgTv}</div><div class="card-sub">média de vacinados (milhares)</div></div>
+    <div class="card verm"><div class="card-label">BCG 2022</div><div class="card-value">${avgBcg}</div><div class="card-sub">média de vacinados (milhares)</div></div>
+  `;
+}
+
+/* ════════════════════════════════════════════════════
+   VACINAÇÃO — GRÁFICOS
+════════════════════════════════════════════════════ */
+let vacYear = 2019;
+function setVacYear(y, btn) {
+  vacYear = y;
+  document.querySelectorAll('.year-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  buildVacinaCharts();
+}
+
+function buildVacinaCharts() {
+  const tipo = document.getElementById('vac-tipo').value;
+  const yk = vacYear - 2019; // 0=2019..3=2022
+  const polioKey = ['polio_2019','polio_2020','polio_2021','polio_2022'][yk];
+  const tvKey    = ['tv_2019','tv_2020','tv_2021','tv_2022'][yk];
+
+  if (tipo === 'bcg') {
+    document.getElementById('chart-grid-polio-tv').style.display = 'none';
+    document.getElementById('chart-grid-bcg').style.display = 'block';
+    document.getElementById('year-selector-wrap').style.display = 'none';
+    buildVacBar('bar-bcg', vacinaData, 'bcg_2022', 'verde');
+  } else {
+    document.getElementById('chart-grid-polio-tv').style.display = 'grid';
+    document.getElementById('chart-grid-bcg').style.display = 'none';
+    document.getElementById('year-selector-wrap').style.display = 'flex';
+    buildVacBar('bar-polio', vacinaData, polioKey, 'verde');
+    buildVacBar('bar-tv',    vacinaData, tvKey,    '');
+  }
+}
+
+function buildVacBar(elId, data, key, cls) {
+  const sorted = [...data].sort((a,b)=>b[key]-a[key]).slice(0,15);
+  const max = Math.max(...sorted.map(d=>d[key]));
+  const html = sorted.map(d => {
+    const pct = (d[key]/max*100).toFixed(1);
+    // cor: verde se acima da média geral, vermelho se muito baixo
+    const avg = data.reduce((s,r)=>s+r[key],0)/data.length;
+    const col = d[key] >= avg ? 'var(--verde)' : d[key] >= avg*0.7 ? 'var(--azul)' : 'var(--verm)';
+    return `<div class="h-bar-row">
+      <div class="h-bar-label">${d.municipio}</div>
+      <div class="h-bar-bg"><div class="h-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+      <div class="h-bar-val">${d[key].toFixed(1)}</div>
+    </div>`;
+  }).join('');
+  document.getElementById(elId).innerHTML = html;
+}
+
+/* ════════════════════════════════════════════════════
+   VACINAÇÃO — TABELA
+════════════════════════════════════════════════════ */
+let vacSortCol='municipio', vacSortAsc=true, vacPage=1;
+
+function sortVac(col) {
+  if (vacSortCol===col) vacSortAsc=!vacSortAsc;
+  else { vacSortCol=col; vacSortAsc=true; }
+  vacPage=1; renderVacTable();
+}
+
+function onVacTipoChange() {
+  vacPage=1;
+  buildVacinaCharts();
+  renderVacTable();
+}
+
+function getVacVal(d, col, tipo) {
+  if (tipo === 'bcg') {
+    if (col === 'y2022') return d.bcg_2022;
+    if (col.startsWith('y20')) return null;
+  }
+  if (col==='y2019') return tipo==='polio'?d.polio_2019:d.tv_2019;
+  if (col==='y2020') return tipo==='polio'?d.polio_2020:d.tv_2020;
+  if (col==='y2021') return tipo==='polio'?d.polio_2021:d.tv_2021;
+  if (col==='y2022') return tipo==='polio'?d.polio_2022:d.tv_2022;
+  return d[col];
+}
+
+function covVal(v) {
+  if (!v || isNaN(v)) return '';
+  if (v >= 95) return 'cov-high';
+  if (v >= 70) return 'cov-mid';
+  return 'cov-low';
+}
+
+function renderVacTable() {
+  const regFil = document.getElementById('vac-regiao').value;
+  const tipo   = document.getElementById('vac-tipo').value;
+  const busca  = document.getElementById('vac-busca').value.toLowerCase();
+
+  let data = vacinaData.filter(d =>
+    (!regFil || d.regiao_saude===regFil) &&
+    (!busca || d.municipio.toLowerCase().includes(busca))
+  );
+
+  data.sort((a,b) => {
+    let va=getVacVal(a,vacSortCol,tipo), vb=getVacVal(b,vacSortCol,tipo);
+    if (va==null) va=-Infinity; if (vb==null) vb=-Infinity;
+    if (typeof va==='string') return vacSortAsc?va.localeCompare(vb):vb.localeCompare(va);
+    return vacSortAsc?va-vb:vb-va;
+  });
+
+  const total = data.length;
+  const pages = Math.ceil(total/ROWS)||1;
+  if (vacPage>pages) vacPage=1;
+  const slice = data.slice((vacPage-1)*ROWS, vacPage*ROWS);
+
+  const getCol = (d,y) => {
+    if (tipo==='polio') return [d.polio_2019,d.polio_2020,d.polio_2021,d.polio_2022][y];
+    if (tipo==='tv') return [d.tv_2019,d.tv_2020,d.tv_2021,d.tv_2022][y];
+    if (tipo==='bcg') return [null, null, null, d.bcg_2022][y];
+  };
+
+  const rows = slice.map(d => {
+    const cols = [0,1,2,3].map(i => {
+      const v = getCol(d,i);
+      return `<td><span class="${covVal(v)}">${fmt(v,1)}</span></td>`;
+    }).join('');
+    return `<tr>
+      <td><strong>${d.municipio}</strong></td>
+      <td><span class="${regiaoClass(d.regiao_saude)}">${d.regiao_saude}</span></td>
+      <td>${fmtNum(d.populacao_2022)}</td>
+      ${cols}
+    </tr>`;
+  }).join('');
+
+  document.getElementById('vac-tbody').innerHTML = rows;
+  renderPag('vac-pag', vacPage, pages, (p)=>{ vacPage=p; renderVacTable(); });
+}
+
+/* ════════════════════════════════════════════════════
+   PAGINAÇÃO
+════════════════════════════════════════════════════ */
+function renderPag(elId, cur, total, cb) {
+  if (total<=1) { document.getElementById(elId).innerHTML=''; return; }
+  let html = `<span>${cur} de ${total}</span>`;
+  html += `<button onclick="(${cb.toString()})(${cur-1})" ${cur<=1?'disabled':''}>‹ Anterior</button>`;
+  for (let p=Math.max(1,cur-1); p<=Math.min(total,cur+1); p++) {
+    html += `<button class="${p===cur?'active':''}" onclick="(${cb.toString()})(${p})">${p}</button>`;
+  }
+  html += `<button onclick="(${cb.toString()})(${cur+1})" ${cur>=total?'disabled':''}>Próxima ›</button>`;
+  document.getElementById(elId).innerHTML = html;
+}
+
+/* ════════════════════════════════════════════════════
+   TABS
+════════════════════════════════════════════════════ */
+function showTab(name, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════ */
+buildLeitosSummary();
+buildLeitosChart();
+renderLeitosTable();
+buildVacinaSummary();
+buildVacinaCharts();
+renderVacTable();
+</script>
+</body>
+</html>
